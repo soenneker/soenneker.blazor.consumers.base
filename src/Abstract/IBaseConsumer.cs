@@ -1,11 +1,12 @@
+using Soenneker.Blazor.ApiClient.Dtos;
+using Soenneker.Blazor.Consumers.Core.Abstract;
+using Soenneker.Dtos.ProblemDetails;
+using Soenneker.Dtos.RequestDataOptions;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Soenneker.Blazor.ApiClient.Dtos;
-using Soenneker.Blazor.Consumers.Core.Abstract;
-using Soenneker.Dtos.ProblemDetails;
 
 namespace Soenneker.Blazor.Consumers.Base.Abstract;
 
@@ -33,12 +34,13 @@ public interface IBaseConsumer : ICoreConsumer
     /// Retrieves all resources asynchronously.
     /// </summary>
     /// <typeparam name="TResponse">The type of the response expected.</typeparam>
+    /// <param name="requestDataOptions"></param>
     /// <param name="overrideUri"></param>
     /// <param name="allowAnonymous">Indicates whether anonymous access is allowed.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>A tuple containing a list of responses and any problem details.</returns>
     [Pure]
-    ValueTask<(List<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(string? overrideUri = null, bool allowAnonymous = false, CancellationToken cancellationToken = default);
+    ValueTask<(List<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(RequestDataOptions? requestDataOptions = null, string? overrideUri = null, bool allowAnonymous = false, CancellationToken cancellationToken = default);
 
     [Pure]
     ValueTask<(List<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);

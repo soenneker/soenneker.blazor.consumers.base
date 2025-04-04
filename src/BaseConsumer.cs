@@ -9,6 +9,7 @@ using Soenneker.Blazor.ApiClient.Dtos;
 using Soenneker.Blazor.Consumers.Base.Abstract;
 using Soenneker.Blazor.Consumers.Core;
 using Soenneker.Dtos.ProblemDetails;
+using Soenneker.Dtos.RequestDataOptions;
 using Soenneker.Extensions.HttpResponseMessage;
 using Soenneker.Extensions.Object;
 using Soenneker.Extensions.ValueTask;
@@ -38,10 +39,14 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
         return await message.ToWithDetails<TResponse>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual ValueTask<(List<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(string? overrideUri = null, bool allowAnonymous = false,
+    public virtual ValueTask<(List<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(RequestDataOptions? requestDataOptions = null, string? overrideUri = null,  bool allowAnonymous = false,
         CancellationToken cancellationToken = default)
     {
         string uri = overrideUri ?? PrefixUri;
+
+        if (requestDataOptions != null)
+            uri += requestDataOptions.ToQueryString();
+
         var requestOptions = new RequestOptions {Uri = uri, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse};
 
         return GetAll<TResponse>(requestOptions, cancellationToken);
