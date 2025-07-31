@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -10,6 +9,7 @@ using Soenneker.Blazor.Consumers.Base.Abstract;
 using Soenneker.Blazor.Consumers.Core;
 using Soenneker.Dtos.ProblemDetails;
 using Soenneker.Dtos.RequestDataOptions;
+using Soenneker.Dtos.Results.Paged;
 using Soenneker.Extensions.HttpResponseMessage;
 using Soenneker.Extensions.Object;
 using Soenneker.Extensions.ValueTask;
@@ -39,8 +39,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
         return await message.ToWithDetails<TResponse>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual ValueTask<(List<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(RequestDataOptions? requestDataOptions = null, string? overrideUri = null,  bool allowAnonymous = false,
-        CancellationToken cancellationToken = default)
+    public virtual ValueTask<(PagedResult<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(RequestDataOptions? requestDataOptions = null,
+        string? overrideUri = null, bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
         string uri = overrideUri ?? PrefixUri;
 
@@ -52,11 +52,11 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
         return GetAll<TResponse>(requestOptions, cancellationToken);
     }
 
-    public virtual async ValueTask<(List<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(RequestOptions requestOptions,
+    public virtual async ValueTask<(PagedResult<TResponse>? response, ProblemDetailsDto? details)> GetAll<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken).NoSync();
-        return await message.ToWithDetails<List<TResponse>>(Logger, cancellationToken).NoSync();
+        return await message.ToWithDetails<PagedResult<TResponse>>(Logger, cancellationToken).NoSync();
     }
 
     public virtual ValueTask<(TResponse? response, ProblemDetailsDto? details)> Create<TResponse>(object request, string? overrideUri = null,
