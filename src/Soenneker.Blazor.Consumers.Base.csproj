@@ -43,7 +43,7 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Blazor.Consumers.Core" Version="3.0.221" />
-        <PackageReference Include="Soenneker.Dtos.RequestDataOptions" Version="3.0.41" />
+        <PackageReference Include="Soenneker.Dtos.RequestDataOptions" Version="3.0.44" />
         <PackageReference Include="Soenneker.Dtos.Results.Paged" Version="3.0.6" />
     </ItemGroup>
 </Project>
