@@ -13,9 +13,9 @@ namespace Soenneker.Blazor.Consumers.Base.Abstract;
 /// <summary>
 /// A wrapper around Soenneker.Blazor.ApiClient supporting auto (de)serialization for requests/responses/ProblemDetails.
 /// </summary>
-public partial interface IBaseConsumer : ICoreConsumer
+public interface IBaseConsumer : ICoreConsumer
 {
-    // New OperationResult methods
+    // OperationResult methods
     /// <summary>
     /// Retrieves a single resource by ID asynchronously using OperationResult.
     /// </summary>
@@ -26,10 +26,10 @@ public partial interface IBaseConsumer : ICoreConsumer
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An OperationResult containing the response or problem details.</returns>
     [Pure]
-    ValueTask<OperationResult<TResponse>?> GetResult<TResponse>(string? id, string? overrideUri = null, bool allowAnonymous = false, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Get<TResponse>(string? id, string? overrideUri = null, bool allowAnonymous = false, CancellationToken cancellationToken = default);
 
     [Pure]
-    ValueTask<OperationResult<TResponse>?> GetResult<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Get<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves all resources asynchronously using OperationResult.
@@ -41,11 +41,11 @@ public partial interface IBaseConsumer : ICoreConsumer
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An OperationResult containing a list of responses or problem details.</returns>
     [Pure]
-    ValueTask<OperationResult<PagedResult<TResponse>>?> GetAllResult<TResponse>(RequestDataOptions? requestDataOptions = null, string? overrideUri = null,
+    ValueTask<OperationResult<PagedResult<TResponse>>?> GetAll<TResponse>(RequestDataOptions? requestDataOptions = null, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default);
 
     [Pure]
-    ValueTask<OperationResult<PagedResult<TResponse>>?> GetAllResult<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<PagedResult<TResponse>>?> GetAll<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates a new resource asynchronously using OperationResult.
@@ -56,15 +56,15 @@ public partial interface IBaseConsumer : ICoreConsumer
     /// <param name="allowAnonymous">Indicates whether anonymous access is allowed.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An OperationResult containing the created response or problem details.</returns>
-    ValueTask<OperationResult<TResponse>?> CreateResult<TResponse>(object request, string? overrideUri = null, bool allowAnonymous = false,
+    ValueTask<OperationResult<TResponse>?> Create<TResponse>(object request, string? overrideUri = null, bool allowAnonymous = false,
         CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> CreateResult<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Create<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> PostResult<TResponse>(object request, string? overrideUri = null, bool allowAnonymous = false,
+    ValueTask<OperationResult<TResponse>?> Post<TResponse>(object request, string? overrideUri = null, bool allowAnonymous = false,
         CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> PostResult<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Post<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates an existing resource asynchronously by ID using OperationResult.
@@ -76,15 +76,15 @@ public partial interface IBaseConsumer : ICoreConsumer
     /// <param name="allowAnonymous">Indicates whether anonymous access is allowed.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An OperationResult containing the updated response or problem details.</returns>
-    ValueTask<OperationResult<TResponse>?> UpdateResult<TResponse>(string? id, object request, string? overrideUri = null, bool allowAnonymous = false,
+    ValueTask<OperationResult<TResponse>?> Update<TResponse>(string? id, object request, string? overrideUri = null, bool allowAnonymous = false,
         CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> UpdateResult<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Update<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> PutResult<TResponse>(string? id, object request, string? overrideUri = null, bool allowAnonymous = false,
+    ValueTask<OperationResult<TResponse>?> Put<TResponse>(string? id, object request, string? overrideUri = null, bool allowAnonymous = false,
         CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> PutResult<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Put<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes a resource asynchronously by ID using OperationResult.
@@ -95,10 +95,10 @@ public partial interface IBaseConsumer : ICoreConsumer
     /// <param name="allowAnonymous">Indicates whether anonymous access is allowed.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An OperationResult containing the deleted response or problem details.</returns>
-    ValueTask<OperationResult<TResponse>?> DeleteResult<TResponse>(string? id, string? overrideUri = null, bool allowAnonymous = false,
+    ValueTask<OperationResult<TResponse>?> Delete<TResponse>(string? id, string? overrideUri = null, bool allowAnonymous = false,
         CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> DeleteResult<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Delete<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Uploads a file stream asynchronously using OperationResult.
@@ -111,8 +111,8 @@ public partial interface IBaseConsumer : ICoreConsumer
     /// <param name="allowAnonymous">Indicates whether anonymous access is allowed.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An OperationResult containing the upload response or problem details.</returns>
-    ValueTask<OperationResult<TResponse>?> UploadResult<TResponse>(string? id, Stream stream, string fileName, string? overrideUri = null, bool allowAnonymous = false,
+    ValueTask<OperationResult<TResponse>?> Upload<TResponse>(string? id, Stream stream, string fileName, string? overrideUri = null, bool allowAnonymous = false,
         CancellationToken cancellationToken = default);
 
-    ValueTask<OperationResult<TResponse>?> UploadResult<TResponse>(RequestUploadOptions requestOptions, CancellationToken cancellationToken = default);
+    ValueTask<OperationResult<TResponse>?> Upload<TResponse>(RequestUploadOptions requestOptions, CancellationToken cancellationToken = default);
 }

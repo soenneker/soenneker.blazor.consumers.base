@@ -17,29 +17,29 @@ using Soenneker.Extensions.ValueTask;
 namespace Soenneker.Blazor.Consumers.Base;
 
 ///<inheritdoc cref="IBaseConsumer"/>
-public partial class BaseConsumer : CoreConsumer, IBaseConsumer
+public class BaseConsumer : CoreConsumer, IBaseConsumer
 {
     protected BaseConsumer(IApiClient apiClient, ILogger<BaseConsumer> logger, string prefixUri) : base(apiClient, logger, prefixUri)
     {
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> GetResult<TResponse>(string? id, string? overrideUri = null,
+    public virtual ValueTask<OperationResult<TResponse>?> Get<TResponse>(string? id, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
         string uri = overrideUri ?? $"{PrefixUri}/{id}";
         var requestOptions = new RequestOptions {Uri = uri, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse};
 
-        return GetResult<TResponse>(requestOptions, cancellationToken);
+        return Get<TResponse>(requestOptions, cancellationToken);
     }
 
-    public virtual async ValueTask<OperationResult<TResponse>?> GetResult<TResponse>(RequestOptions requestOptions,
+    public virtual async ValueTask<OperationResult<TResponse>?> Get<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken).NoSync();
         return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual ValueTask<OperationResult<PagedResult<TResponse>>?> GetAllResult<TResponse>(RequestDataOptions? requestDataOptions = null,
+    public virtual ValueTask<OperationResult<PagedResult<TResponse>>?> GetAll<TResponse>(RequestDataOptions? requestDataOptions = null,
         string? overrideUri = null, bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
         string uri = overrideUri ?? PrefixUri;
@@ -49,29 +49,29 @@ public partial class BaseConsumer : CoreConsumer, IBaseConsumer
 
         var requestOptions = new RequestOptions {Uri = uri, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse};
 
-        return GetAllResult<TResponse>(requestOptions, cancellationToken);
+        return GetAll<TResponse>(requestOptions, cancellationToken);
     }
 
-    public virtual async ValueTask<OperationResult<PagedResult<TResponse>>?> GetAllResult<TResponse>(RequestOptions requestOptions,
+    public virtual async ValueTask<OperationResult<PagedResult<TResponse>>?> GetAll<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken).NoSync();
         return await message.ToResult<PagedResult<TResponse>>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> CreateResult<TResponse>(object request, string? overrideUri = null,
+    public virtual ValueTask<OperationResult<TResponse>?> Create<TResponse>(object request, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
-        return PostResult<TResponse>(request, overrideUri, allowAnonymous, cancellationToken);
+        return Post<TResponse>(request, overrideUri, allowAnonymous, cancellationToken);
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> CreateResult<TResponse>(RequestOptions requestOptions,
+    public virtual ValueTask<OperationResult<TResponse>?> Create<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        return PostResult<TResponse>(requestOptions, cancellationToken);
+        return Post<TResponse>(requestOptions, cancellationToken);
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> PostResult<TResponse>(object request, string? overrideUri = null,
+    public virtual ValueTask<OperationResult<TResponse>?> Post<TResponse>(object request, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
         request.ThrowIfNull();
@@ -80,29 +80,29 @@ public partial class BaseConsumer : CoreConsumer, IBaseConsumer
         var requestOptions = new RequestOptions
             {Uri = uri, Object = request, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse};
 
-        return PostResult<TResponse>(requestOptions, cancellationToken);
+        return Post<TResponse>(requestOptions, cancellationToken);
     }
 
-    public virtual async ValueTask<OperationResult<TResponse>?> PostResult<TResponse>(RequestOptions requestOptions,
+    public virtual async ValueTask<OperationResult<TResponse>?> Post<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage message = await ApiClient.Post(requestOptions, cancellationToken).NoSync();
         return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> UpdateResult<TResponse>(string? id, object request, string? overrideUri = null,
+    public virtual ValueTask<OperationResult<TResponse>?> Update<TResponse>(string? id, object request, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
-        return PutResult<TResponse>(id, request, overrideUri, allowAnonymous, cancellationToken);
+        return Put<TResponse>(id, request, overrideUri, allowAnonymous, cancellationToken);
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> UpdateResult<TResponse>(RequestOptions requestOptions,
+    public virtual ValueTask<OperationResult<TResponse>?> Update<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        return PutResult<TResponse>(requestOptions, cancellationToken);
+        return Put<TResponse>(requestOptions, cancellationToken);
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> PutResult<TResponse>(string? id, object request, string? overrideUri = null,
+    public virtual ValueTask<OperationResult<TResponse>?> Put<TResponse>(string? id, object request, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
         request.ThrowIfNull();
@@ -111,17 +111,17 @@ public partial class BaseConsumer : CoreConsumer, IBaseConsumer
         var requestOptions = new RequestOptions
             {Uri = uri, Object = request, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse};
 
-        return PutResult<TResponse>(requestOptions, cancellationToken);
+        return Put<TResponse>(requestOptions, cancellationToken);
     }
 
-    public virtual async ValueTask<OperationResult<TResponse>?> PutResult<TResponse>(RequestOptions requestOptions,
+    public virtual async ValueTask<OperationResult<TResponse>?> Put<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage message = await ApiClient.Put(requestOptions, cancellationToken).NoSync();
         return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual async ValueTask<OperationResult<TResponse>?> DeleteResult<TResponse>(string? id, string? overrideUri = null,
+    public virtual async ValueTask<OperationResult<TResponse>?> Delete<TResponse>(string? id, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
         string uri = overrideUri ?? $"{PrefixUri}/{id}";
@@ -132,24 +132,24 @@ public partial class BaseConsumer : CoreConsumer, IBaseConsumer
         return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual async ValueTask<OperationResult<TResponse>?> DeleteResult<TResponse>(RequestOptions requestOptions,
+    public virtual async ValueTask<OperationResult<TResponse>?> Delete<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken).NoSync();
         return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
     }
 
-    public virtual ValueTask<OperationResult<TResponse>?> UploadResult<TResponse>(string? id, Stream stream, string fileName,
+    public virtual ValueTask<OperationResult<TResponse>?> Upload<TResponse>(string? id, Stream stream, string fileName,
         string? overrideUri = null, bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
         string uri = overrideUri ?? $"{PrefixUri}/{id}/upload";
         var options = new RequestUploadOptions
             {Uri = uri, Stream = stream, FileName = fileName, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse};
 
-        return UploadResult<TResponse>(options, cancellationToken);
+        return Upload<TResponse>(options, cancellationToken);
     }
 
-    public virtual async ValueTask<OperationResult<TResponse>?> UploadResult<TResponse>(RequestUploadOptions requestOptions,
+    public virtual async ValueTask<OperationResult<TResponse>?> Upload<TResponse>(RequestUploadOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
         HttpResponseMessage message = await ApiClient.Upload(requestOptions, cancellationToken).NoSync();
