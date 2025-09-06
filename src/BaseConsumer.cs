@@ -35,8 +35,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
     public virtual async ValueTask<OperationResult<TResponse>?> Get<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken).NoSync();
-        return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
+        HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken);
+        return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
     public virtual ValueTask<OperationResult<PagedResult<TResponse>>?> GetAll<TResponse>(RequestDataOptions? requestDataOptions = null,
@@ -55,8 +55,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
     public virtual async ValueTask<OperationResult<PagedResult<TResponse>>?> GetAll<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken).NoSync();
-        return await message.ToResult<PagedResult<TResponse>>(Logger, cancellationToken).NoSync();
+        HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken);
+        return await message.ToResult<PagedResult<TResponse>>(Logger, cancellationToken);
     }
 
     public virtual ValueTask<OperationResult<TResponse>?> Create<TResponse>(object request, string? overrideUri = null,
@@ -86,8 +86,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
     public virtual async ValueTask<OperationResult<TResponse>?> Post<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Post(requestOptions, cancellationToken).NoSync();
-        return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
+        HttpResponseMessage message = await ApiClient.Post(requestOptions, cancellationToken);
+        return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
     public virtual ValueTask<OperationResult<TResponse>?> Update<TResponse>(string? id, object request, string? overrideUri = null,
@@ -117,8 +117,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
     public virtual async ValueTask<OperationResult<TResponse>?> Put<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Put(requestOptions, cancellationToken).NoSync();
-        return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
+        HttpResponseMessage message = await ApiClient.Put(requestOptions, cancellationToken);
+        return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
     public virtual async ValueTask<OperationResult<TResponse>?> Delete<TResponse>(string? id, string? overrideUri = null,
@@ -127,16 +127,16 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
         string uri = overrideUri ?? $"{PrefixUri}/{id}";
         var requestOptions = new RequestOptions {Uri = uri, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse};
 
-        HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken).NoSync();
+        HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken);
 
-        return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
+        return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
     public virtual async ValueTask<OperationResult<TResponse>?> Delete<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken).NoSync();
-        return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
+        HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken);
+        return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
     public virtual ValueTask<OperationResult<TResponse>?> Upload<TResponse>(string? id, Stream stream, string fileName,
@@ -152,7 +152,7 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
     public virtual async ValueTask<OperationResult<TResponse>?> Upload<TResponse>(RequestUploadOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Upload(requestOptions, cancellationToken).NoSync();
-        return await message.ToResult<TResponse>(Logger, cancellationToken).NoSync();
+        HttpResponseMessage message = await ApiClient.Upload(requestOptions, cancellationToken);
+        return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 }
