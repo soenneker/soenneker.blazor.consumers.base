@@ -15,7 +15,7 @@ using Soenneker.Extensions.Object;
 
 namespace Soenneker.Blazor.Consumers.Base;
 
-///<inheritdoc cref="IBaseConsumer"/>
+/// <inheritdoc cref="IBaseConsumer"/>
 public class BaseConsumer : CoreConsumer, IBaseConsumer
 {
     protected BaseConsumer(IApiClient apiClient, ILogger<BaseConsumer> logger, string prefixUri) : base(apiClient, logger, prefixUri)
