@@ -5,55 +5,86 @@
 
 # Soenneker.Blazor.Consumers.Base
 
-A wrapper around Soenneker.Blazor.ApiClient supporting auto (de)serialization for requests/responses/ProblemDetails.
+A base class that sends common API requests through `IApiClient` and converts JSON success or problem-details responses into `OperationResult<T>`.
 
-## Install
+Use this package when one consumer needs different response types per operation. If every operation uses the same response type, `Soenneker.Blazor.Consumer` provides the typed `Consumer<TResponse>` layer.
+
+## Installation
 
 ```bash
 dotnet add package Soenneker.Blazor.Consumers.Base
 ```
 
-## Quick start
+## Define and register a consumer
+
+`BaseConsumer` has a protected constructor, so derive an application-specific class and choose its URI prefix:
 
 ```csharp
-using Soenneker.Blazor.Consumers.Base.Abstract;
+using Microsoft.Extensions.Logging;
+using Soenneker.Blazor.ApiClient.Abstract;
+using Soenneker.Blazor.Consumers.Base;
 
-IBaseConsumer baseConsumer = /* resolve from DI */;
-var result = await baseConsumer.Get("value", default);
+public sealed class CatalogConsumer : BaseConsumer
+{
+    public CatalogConsumer(
+        IApiClient apiClient,
+        ILogger<BaseConsumer> logger,
+        IConfiguration configuration)
+        : base(apiClient, logger, "catalog/products")
+    {
+        apiClient.Initialize(
+            configuration["Api:BaseUrl"]!,
+            requestResponseLogging: false);
+    }
+}
 ```
 
-Retrieves a single resource by ID asynchronously using OperationResult.
+```csharp
+using Soenneker.Blazor.ApiClient.Registrars;
 
-## What you get
+builder.Services.AddApiClientAsScoped();
+builder.Services.AddScoped<CatalogConsumer>();
+```
 
-- `IBaseConsumer` — A wrapper around Soenneker.Blazor.ApiClient supporting auto (de)serialization for requests/responses/ProblemDetails.
+## Send requests
 
-## API at a glance
+The response type is selected on each call:
 
-| API | What it does | Result / important behavior |
-| --- | --- | --- |
-| `IBaseConsumer.Get(id, overrideUri, allowAnonymous, cancellationToken)` | Retrieves a single resource by ID asynchronously using OperationResult. | An OperationResult containing the response or problem details. |
-| `IBaseConsumer.Get(requestOptions, cancellationToken)` | Asynchronously retrieves a response of the specified type using the provided request options. | A task whose result is the requested operation Result. |
-| `IBaseConsumer.GetAll(requestDataOptions, overrideUri, allowAnonymous, cancellationToken)` | Retrieves all resources asynchronously using OperationResult. | An OperationResult containing a list of responses or problem details. |
-| `IBaseConsumer.GetAll(requestOptions, cancellationToken)` | Retrieves a paged collection of items that match the specified request options. | A task whose result is the requested operation Result. |
-| `IBaseConsumer.Create(request, overrideUri, allowAnonymous, cancellationToken)` | Creates a new resource asynchronously using OperationResult. | An OperationResult containing the created response or problem details. |
-| `IBaseConsumer.Create(requestOptions, cancellationToken)` | Creates a new resource using the specified request options and returns the result asynchronously. | A value task that represents the asynchronous creation operation. The result contains an `OperationResult{TResponse}` indicating the outcome and, if successful, the created resource. |
-| `IBaseConsumer.Post(request, overrideUri, allowAnonymous, cancellationToken)` | Sends an HTTP POST request with the specified request payload and returns the deserialized response. | A ValueTask that represents the asynchronous operation. The result contains the deserialized response or error information. |
-| `IBaseConsumer.Post(requestOptions, cancellationToken)` | Sends an HTTP POST request using the specified options and returns the deserialized response. | A value task that represents the asynchronous operation. The result contains the outcome of the request and the deserialized response of type `TResponse`. |
-| `IBaseConsumer.Update(id, request, overrideUri, allowAnonymous, cancellationToken)` | Updates an existing resource asynchronously by ID using OperationResult. | An OperationResult containing the updated response or problem details. |
-| `IBaseConsumer.Update(requestOptions, cancellationToken)` | Asynchronously updates the resource using the specified request options. | A ValueTask that represents the asynchronous update operation. The task result contains an OperationResult of type TResponse with the outcome of the update. |
-| `IBaseConsumer.Put(id, request, overrideUri, allowAnonymous, cancellationToken)` | Sends an HTTP PUT request with the specified payload and returns the deserialized response. | A ValueTask that represents the asynchronous operation. The result contains the deserialized response of type TResponse and information about the operation's success or failure. |
-| `IBaseConsumer.Put(requestOptions, cancellationToken)` | Sends a PUT request using the specified options and returns the result asynchronously. | A value task that represents the asynchronous operation. The result contains the outcome of the PUT request, including the deserialized response of type TResponse if successful. |
-| `IBaseConsumer.Delete(id, overrideUri, allowAnonymous, cancellationToken)` | Deletes a resource asynchronously by ID using OperationResult. | An OperationResult containing the deleted response or problem details. |
-| `IBaseConsumer.Delete(requestOptions, cancellationToken)` | Sends a request to delete a resource and returns the result of the operation asynchronously. | A ValueTask that represents the asynchronous delete operation. The result contains an OperationResult with the response of type TResponse. |
-| `IBaseConsumer.Upload(id, stream, fileName, overrideUri, allowAnonymous, cancellationToken)` | Uploads a file stream asynchronously using OperationResult. | An OperationResult containing the upload response or problem details. |
-| `IBaseConsumer.Upload(requestOptions, cancellationToken)` | Initiates an asynchronous upload operation using the specified request options and returns the result upon completion. | A value task that represents the asynchronous upload operation. The result contains an OperationResult with the response of type TResponse. |
+```csharp
+OperationResult<ProductDto> product = await catalog.Get<ProductDto>(
+    "42",
+    cancellationToken: cancellationToken);
 
-## Important behavior
+OperationResult<PagedResult<ProductSummaryDto>> page =
+    await catalog.GetAll<ProductSummaryDto>(
+        requestDataOptions,
+        cancellationToken: cancellationToken);
 
-- `IBaseConsumer.Post(request, overrideUri, allowAnonymous, cancellationToken)`: If authentication is required and allowAnonymous is false, the request will include authentication headers as configured. The request object must be serializable to the expected format (such as JSON).
-- `IBaseConsumer.Put(id, request, overrideUri, allowAnonymous, cancellationToken)`: If allowAnonymous is set to false and authentication is required, the request may fail if the user is not authenticated. The request object must be serializable to the expected format (such as JSON).
+OperationResult<ProductDto> created = await catalog.Create<ProductDto>(
+    new CreateProductRequest(name, price),
+    cancellationToken: cancellationToken);
+```
 
-## Practical notes
+Without `overrideUri`, single-resource GET, PUT, DELETE, and upload calls append the supplied ID directly to the configured prefix. Collection GET and POST use the prefix itself. An upload appends `/{id}/upload`. `overrideUri` replaces that entire generated relative URI.
 
-- Cancellation stops pending work; it does not undo work that has already completed.
+Use a `RequestOptions` overload when you already have the exact URI, payload, anonymity choice, and logging flags:
+
+```csharp
+OperationResult<ProductDto> result = await catalog.Post<ProductDto>(
+    new RequestOptions
+    {
+        Uri = "catalog/products/import",
+        Object = request,
+        AllowAnonymous = false,
+        LogResponse = true
+    },
+    cancellationToken);
+```
+
+## Results and failures
+
+Successful JSON is deserialized into `result.Value`; a problem-details response is exposed through `result.Problem`, with `Succeeded`, `Failed`, and `StatusCode` available for branching. Empty successful responses produce a successful result with a null value. Invalid or unexpected response JSON produces a failed result; transport, authentication, and cancellation failures may throw.
+
+The consumer owns and disposes the underlying `HttpResponseMessage` after conversion.
+
+Uploads are always authenticated. Passing `allowAnonymous: true` or setting `RequestUploadOptions.AllowAnonymous` throws `NotSupportedException`. Upload content uses `file` and optional `json` multipart fields, and the supplied stream is disposed after the request.

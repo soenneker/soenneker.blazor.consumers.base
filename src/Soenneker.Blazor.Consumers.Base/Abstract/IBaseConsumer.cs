@@ -193,6 +193,7 @@ public interface IBaseConsumer : ICoreConsumer
     /// <param name="allowAnonymous">Indicates whether anonymous access is allowed.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An OperationResult containing the upload response or problem details.</returns>
+    /// <exception cref="System.NotSupportedException">Thrown when <paramref name="allowAnonymous"/> is true because uploads require authentication.</exception>
     ValueTask<OperationResult<TResponse>> Upload<TResponse>(string? id, Stream stream, string fileName, string? overrideUri = null, bool allowAnonymous = false,
         CancellationToken cancellationToken = default);
 
@@ -207,5 +208,6 @@ public interface IBaseConsumer : ICoreConsumer
     /// completion. Optional.</param>
     /// <returns>A value task that represents the asynchronous upload operation. The result contains an OperationResult with the
     /// response of type TResponse.</returns>
+    /// <exception cref="System.NotSupportedException">Thrown when the options request anonymous access because uploads require authentication.</exception>
     ValueTask<OperationResult<TResponse>> Upload<TResponse>(RequestUploadOptions requestOptions, CancellationToken cancellationToken = default);
 }

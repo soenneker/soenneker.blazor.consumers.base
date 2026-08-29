@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading;
@@ -33,7 +34,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
 
     public virtual async ValueTask<OperationResult<TResponse>> Get<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(requestOptions);
+        using HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken);
         return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
@@ -53,7 +55,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
     public virtual async ValueTask<OperationResult<PagedResult<TResponse>>> GetAll<TResponse>(RequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(requestOptions);
+        using HttpResponseMessage message = await ApiClient.Get(requestOptions, cancellationToken: cancellationToken);
         return await message.ToResult<PagedResult<TResponse>>(Logger, cancellationToken);
     }
 
@@ -82,7 +85,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
 
     public virtual async ValueTask<OperationResult<TResponse>> Post<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Post(requestOptions, cancellationToken);
+        ArgumentNullException.ThrowIfNull(requestOptions);
+        using HttpResponseMessage message = await ApiClient.Post(requestOptions, cancellationToken);
         return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
@@ -111,7 +115,8 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
 
     public virtual async ValueTask<OperationResult<TResponse>> Put<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Put(requestOptions, cancellationToken);
+        ArgumentNullException.ThrowIfNull(requestOptions);
+        using HttpResponseMessage message = await ApiClient.Put(requestOptions, cancellationToken);
         return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
@@ -121,20 +126,27 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
         string uri = overrideUri ?? $"{PrefixUri}/{id}";
         var requestOptions = new RequestOptions { Uri = uri, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse };
 
-        HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken);
+        using HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken);
 
         return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
     public virtual async ValueTask<OperationResult<TResponse>> Delete<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken);
+        ArgumentNullException.ThrowIfNull(requestOptions);
+        using HttpResponseMessage message = await ApiClient.Delete(requestOptions, cancellationToken);
         return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 
     public virtual ValueTask<OperationResult<TResponse>> Upload<TResponse>(string? id, Stream stream, string fileName, string? overrideUri = null,
         bool allowAnonymous = false, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+
+        if (allowAnonymous)
+            throw new NotSupportedException("Anonymous uploads are not supported by the underlying API client.");
+
         string uri = overrideUri ?? $"{PrefixUri}/{id}/upload";
         var options = new RequestUploadOptions
             { Uri = uri, Stream = stream, FileName = fileName, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse };
@@ -145,7 +157,12 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
     public virtual async ValueTask<OperationResult<TResponse>> Upload<TResponse>(RequestUploadOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage message = await ApiClient.Upload(requestOptions, cancellationToken);
+        ArgumentNullException.ThrowIfNull(requestOptions);
+
+        if (requestOptions.AllowAnonymous.GetValueOrDefault())
+            throw new NotSupportedException("Anonymous uploads are not supported by the underlying API client.");
+
+        using HttpResponseMessage message = await ApiClient.Upload(requestOptions, cancellationToken);
         return await message.ToResult<TResponse>(Logger, cancellationToken);
     }
 }
