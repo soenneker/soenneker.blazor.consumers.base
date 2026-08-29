@@ -32,11 +32,9 @@ public interface IBaseConsumer : ICoreConsumer
     /// Asynchronously retrieves a response of the specified type using the provided request options.
     /// </summary>
     /// <typeparam name="TResponse">The type of the response object to retrieve.</typeparam>
-    /// <param name="requestOptions">The options that configure the request, such as headers, query parameters, or other request-specific settings.
-    /// Cannot be null.</param>
+    /// <param name="requestOptions">The options that configure the request, such as headers, query parameters, or other request-specific settings. Cannot be null.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains an OperationResult<TResponse> with
-    /// the response data if the operation succeeds, or error information if it fails.</returns>
+    /// <returns>A task whose result is the requested operation Result.</returns>
     [Pure]
     ValueTask<OperationResult<TResponse>> Get<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
@@ -59,8 +57,7 @@ public interface IBaseConsumer : ICoreConsumer
     /// <typeparam name="TResponse">The type of the items to be returned in the paged result.</typeparam>
     /// <param name="requestOptions">The options that define filtering, sorting, and paging criteria for the query. Cannot be null.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the asynchronous operation.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains an OperationResult with a
-    /// PagedResult of items of type TResponse. The result may be empty if no items match the criteria.</returns>
+    /// <returns>A task whose result is the requested operation Result.</returns>
     [Pure]
     ValueTask<OperationResult<PagedResult<TResponse>>> GetAll<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
@@ -180,11 +177,9 @@ public interface IBaseConsumer : ICoreConsumer
     /// Sends a request to delete a resource and returns the result of the operation asynchronously.
     /// </summary>
     /// <typeparam name="TResponse">The type of the response returned upon successful deletion of the resource.</typeparam>
-    /// <param name="requestOptions">The options to configure the delete request, such as headers, query parameters, or authentication settings.
-    /// Cannot be null.</param>
+    /// <param name="requestOptions">The options to configure the delete request, such as headers, query parameters, or authentication settings. Cannot be null.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests. The operation is canceled if the token is triggered.</param>
-    /// <returns>A ValueTask that represents the asynchronous delete operation. The result contains an OperationResult with the
-    /// response of type TResponse.</returns>
+    /// <returns>A ValueTask that represents the asynchronous delete operation. The result contains an OperationResult with the response of type TResponse.</returns>
     ValueTask<OperationResult<TResponse>> Delete<TResponse>(RequestOptions requestOptions, CancellationToken cancellationToken = default);
 
     /// <summary>
