@@ -45,10 +45,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Blazor.Consumers.Core" Version="4.0.732" />
+        <PackageReference Include="Soenneker.Blazor.Consumers.Core" Version="4.0.733" />
         <PackageReference Include="Soenneker.Dtos.RequestDataOptions" Version="4.0.212" />
         <PackageReference Include="Soenneker.Dtos.Results.Paged" Version="4.0.51" />
-        <PackageReference Include="Soenneker.Extensions.HttpResponseMessage" Version="4.0.2543" />
+        <PackageReference Include="Soenneker.Extensions.HttpResponseMessage" Version="4.0.2544" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Soenneker.Dtos.Results.Operation" Version="4.0.65" />
