@@ -47,7 +47,7 @@ public class BaseConsumer : CoreConsumer, IBaseConsumer
         string uri = overrideUri ?? PrefixUri;
 
         if (requestDataOptions != null)
-            uri += requestDataOptions.ToQueryString();
+            uri += requestDataOptions.ToQueryString(BaseConsumerJsonContext.Default.RequestDataOptions);
 
         var requestOptions = new RequestOptions { Uri = uri, AllowAnonymous = allowAnonymous, LogRequest = LogRequest, LogResponse = LogResponse };
 
