@@ -45,15 +45,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Blazor.Consumers.Core" Version="4.0.763" />
-        <PackageReference Include="Soenneker.Dtos.RequestDataOptions" Version="4.0.224" />
-        <PackageReference Include="Soenneker.Dtos.Results.Paged" Version="4.0.57" />
-        <PackageReference Include="Soenneker.Extensions.HttpResponseMessage" Version="4.0.2583" />
+        <PackageReference Include="Soenneker.Blazor.Consumers.Core" Version="4.0.764" />
+        <PackageReference Include="Soenneker.Dtos.RequestDataOptions" Version="4.0.225" />
+        <PackageReference Include="Soenneker.Dtos.Results.Paged" Version="4.0.58" />
+        <PackageReference Include="Soenneker.Extensions.HttpResponseMessage" Version="4.0.2586" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Soenneker.Dtos.Results.Operation" Version="4.0.73" />
+        <PackageReference Include="Soenneker.Dtos.Results.Operation" Version="4.0.74" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.13" />
     </ItemGroup>
 </Project>
