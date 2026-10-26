@@ -51,7 +51,7 @@
         <PackageReference Include="Soenneker.Extensions.HttpResponseMessage" Version="4.0.2614" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Soenneker.Dtos.Results.Operation" Version="4.0.82" />
+        <PackageReference Include="Soenneker.Dtos.Results.Operation" Version="11.0.83" />
     </ItemGroup>
     <ItemGroup>
     </ItemGroup>
