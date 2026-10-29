@@ -45,7 +45,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Blazor.Consumers.Core" Version="11.0.790" />
+        <PackageReference Include="Soenneker.Blazor.Consumers.Core" Version="11.0.791" />
         <PackageReference Include="Soenneker.Dtos.RequestDataOptions" Version="11.0.245" />
         <PackageReference Include="Soenneker.Dtos.Results.Paged" Version="11.0.69" />
         <PackageReference Include="Soenneker.Extensions.HttpResponseMessage" Version="11.0.2634" />
