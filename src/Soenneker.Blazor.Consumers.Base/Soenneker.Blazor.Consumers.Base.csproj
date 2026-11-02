@@ -50,9 +50,4 @@
         <PackageReference Include="Soenneker.Dtos.Results.Paged" Version="11.0.69" />
         <PackageReference Include="Soenneker.Extensions.HttpResponseMessage" Version="11.0.2634" />
     </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Soenneker.Dtos.Results.Operation" Version="11.0.85" />
-    </ItemGroup>
-    <ItemGroup>
-    </ItemGroup>
 </Project>
